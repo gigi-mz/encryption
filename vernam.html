@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chiffrement Vernam</title>
+  <style>
+   body {
+      background: #1e1e2f;
+      color: #f1f1f1;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #61dafb;
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      margin: 15px 0 5px;
+      font-weight: bold;
+    }
+
+    textarea, input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      background: #2c2c3e;
+      color: #f1f1f1;
+      border: 1px solid #444;
+      border-radius: 5px;
+      font-size: 1em;
+    }
+
+    .button-container {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin: 20px 0;
+    }
+
+    .btn {
+      flex: 1;
+      min-width: 150px;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      color: #fff;
+      background: linear-gradient(135deg, #61dafb, #21a1f1);
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(97, 218, 251, 0.4);
+    }
+
+    .btn.retour {
+      background: linear-gradient(135deg, #f05454, #af1e2d);
+    }
+
+    h2 {
+      margin-top: 30px;
+    }
+
+    pre#resultat {
+      background: #2a2a3d;
+      padding: 15px;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      font-size: 1.1em;
+      min-height: 60px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🔐 Chiffrement Vernam</h1>
+
+  <label for="text">Texte clair :</label>
+  <textarea id="text" rows="4"></textarea>
+
+  <label for="key">Clé (même longueur) :</label>
+  <input type="text" id="key" value="XMCKL" />
+
+  <div class="button-container">
+    <button class="btn" onclick="vernam()">🔁 Chiffrer / Déchiffrer</button>
+    <button class="btn retour" onclick="window.location.href='index.html'">⬅️ Retour à l'accueil</button>
+  </div>
+
+  <h2>📝 Résultat :</h2>
+  <pre id="resultat"></pre>
+
+  <script>
+    function vernamChiffrement(text, key) {
+      const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      text = text.toUpperCase();
+      key = key.toUpperCase();
+      let result = "";
+
+      if (text.length !== key.length) {
+        return "❌ La clé doit être de la même longueur que le texte.";
+      }
+
+      for (let i = 0; i < text.length; i++) {
+        const t = alphabet.indexOf(text[i]);
+        const k = alphabet.indexOf(key[i]);
+
+        if (t === -1 || k === -1) {
+          result += text[i]; // conserver les caractères non alphabétiques
+        } else {
+          const c = (t ^ k) % 26; // opération XOR sur l'alphabet
+          result += alphabet[c];
+        }
+      }
+
+      return result;
+    }
+
+    function vernam() {
+      const text = document.getElementById("text").value;
+      const key = document.getElementById("key").value;
+      const resultat = vernamChiffrement(text, key);
+      document.getElementById("resultat").textContent = resultat;
+    }
+  </script>
+
+</body>
+</html>

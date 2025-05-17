@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chiffrement Autokey</title>
+  <style>
+    body {
+      background: #1e1e2f;
+      color: #f1f1f1;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #61dafb;
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      margin: 15px 0 5px;
+      font-weight: bold;
+    }
+
+    textarea, input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      background: #2c2c3e;
+      color: #f1f1f1;
+      border: 1px solid #444;
+      border-radius: 5px;
+      font-size: 1em;
+    }
+
+    .button-container {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin: 20px 0;
+    }
+
+    .btn {
+      flex: 1;
+      min-width: 150px;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      color: #fff;
+      background: linear-gradient(135deg, #61dafb, #21a1f1);
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(97, 218, 251, 0.4);
+    }
+
+    .btn.retour {
+      background: linear-gradient(135deg, #f05454, #af1e2d);
+    }
+
+    h2 {
+      margin-top: 30px;
+    }
+
+    pre#resultat {
+      background: #2a2a3d;
+      padding: 15px;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      font-size: 1.1em;
+      min-height: 60px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🔐 Chiffrement Autokey</h1>
+
+  <label for="text">Texte :</label>
+  <textarea id="text" rows="4"></textarea>
+
+  <label for="key">Clé :</label>
+  <input type="text" id="key" value="K" />
+
+  <div class="button-container">
+    <button class="btn" onclick="chiffrer()">🔒 Chiffrer</button>
+    <button class="btn" onclick="dechiffrer()">🔓 Déchiffrer</button>
+    <button class="btn retour" onclick="window.location.href='index.html'">⬅️ Retour à l'accueil</button>
+  </div>
+
+  <h2>📝 Résultat :</h2>
+  <pre id="resultat"></pre>
+
+  <script>
+    function autokey(text, key, mode = 'chiffrer') {
+      const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      text = text.toUpperCase();
+      key = key.toUpperCase();
+      let result = "";
+      let keyIndex = 0;
+
+      for (let i = 0; i < text.length; i++) {
+        let c = text[i];
+        if (alphabet.includes(c)) {
+          let index = alphabet.indexOf(c);
+          let keyChar = key[keyIndex % key.length];
+          let keyIndexVal = alphabet.indexOf(keyChar);
+          let shift = mode === 'chiffrer'
+            ? (index + keyIndexVal) % 26
+            : (index - keyIndexVal + 26) % 26;
+          result += alphabet[shift];
+          key += result[i]; // Append to key for next letters
+          keyIndex++;
+        } else {
+          result += c;
+        }
+      }
+
+      return result;
+    }
+
+    function chiffrer() {
+      const texte = document.getElementById("text").value;
+      const key = document.getElementById("key").value;
+      const resultat = autokey(texte, key, 'chiffrer');
+      document.getElementById("resultat").textContent = resultat;
+    }
+
+    function dechiffrer() {
+      const texte = document.getElementById("text").value;
+      const key = document.getElementById("key").value;
+      const resultat = autokey(texte, key, 'dechiffrer');
+      document.getElementById("resultat").textContent = resultat;
+    }
+  </script>
+
+</body>
+</html>

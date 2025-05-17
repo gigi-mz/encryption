@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Chiffrement de Polybe</title>
+  <style>
+    body {
+      background: #1e1e2f;
+      color: #f1f1f1;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #61dafb;
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      margin: 15px 0 5px;
+      font-weight: bold;
+    }
+
+    textarea, input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      background: #2c2c3e;
+      color: #f1f1f1;
+      border: 1px solid #444;
+      border-radius: 5px;
+      font-size: 1em;
+    }
+
+    .button-container {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin: 20px 0;
+    }
+
+    .btn {
+      flex: 1;
+      min-width: 150px;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      color: #fff;
+      background: linear-gradient(135deg, #61dafb, #21a1f1);
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(97, 218, 251, 0.4);
+    }
+
+    .btn.retour {
+      background: linear-gradient(135deg, #f05454, #af1e2d);
+    }
+
+    h2 {
+      margin-top: 30px;
+    }
+
+    pre#resultat {
+      background: #2a2a3d;
+      padding: 15px;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      font-size: 1.1em;
+      min-height: 60px;
+    } </style>
+</head>
+<body>
+
+<h1>🔢 Chiffrement de Polybe</h1>
+
+<label for="text">Texte :</label>
+<textarea id="text" rows="4"></textarea>
+
+<div class="button-container">
+  <button class="btn" onclick="chiffrerPolybe()">🔒 Chiffrer</button>
+  <button class="btn" onclick="dechiffrerPolybe()">🔓 Déchiffrer</button>
+  <button class="btn retour" onclick="window.location.href='index.html'">⬅️ Retour à l'accueil</button>
+</div>
+
+<h2>📝 Résultat :</h2>
+<pre id="resultat"></pre>
+
+<script>
+  const grille = [
+    ['A', 'B', 'C', 'D', 'E'],
+    ['F', 'G', 'H', 'I', 'K'],
+    ['L', 'M', 'N', 'O', 'P'],
+    ['Q', 'R', 'S', 'T', 'U'],
+    ['V', 'W', 'X', 'Y', 'Z']
+  ];
+
+  function chiffrerPolybe() {
+    let texte = document.getElementById('text').value.toUpperCase().replace(/J/g, 'I');
+    let res = "";
+
+    for (let char of texte) {
+      if (char >= 'A' && char <= 'Z') {
+        for (let i = 0; i < 5; i++) {
+          for (let j = 0; j < 5; j++) {
+            if (grille[i][j] === char) {
+              res += `${i + 1}${j + 1} `;
+            }
+          }
+        }
+      } else {
+        res += char;
+      }
+    }
+
+    document.getElementById('resultat').textContent = res.trim();
+  }
+
+  function dechiffrerPolybe() {
+    let texte = document.getElementById('text').value.replace(/\s+/g, '');
+    let res = "";
+
+    for (let i = 0; i < texte.length; i += 2) {
+      let row = parseInt(texte[i]) - 1;
+      let col = parseInt(texte[i + 1]) - 1;
+      if (row >= 0 && row < 5 && col >= 0 && col < 5) {
+        res += grille[row][col];
+      } else {
+        res += '?';
+      }
+    }
+
+    document.getElementById('resultat').textContent = res;
+  }
+</script>
+
+</body>
+</html>
